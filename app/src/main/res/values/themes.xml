@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.EzTick" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Colors -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/dark_primary_color</item>
+        <item name="colorPrimaryVariant">@color/light_primary_color</item>
+        <item name="colorAccent">@color/accent_color</item>
+        <item name="dividerColor">@color/divider_color</item>
+        <item name="colorOnPrimary">@color/text_and_icons</item>
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.EzTick" parent="Base.Theme.EzTick" />
+</resources>
