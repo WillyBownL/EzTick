@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
 
+    android:id="@+id/toolbar_historial"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize">
 

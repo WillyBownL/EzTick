@@ -63,6 +63,9 @@ public class Menu_Lista_Tickets extends AppCompatActivity {
         } else if (id==R.id.CrearTicket) {
             Intent i = new Intent(this, activity_crear_ticket.class);
             startActivity(i);
+        } else if (id==R.id.Historial) {
+            Intent i = new Intent(this, Historial_Tickets.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

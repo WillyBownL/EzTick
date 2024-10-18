@@ -15,6 +15,9 @@
         android:theme="@style/Theme.EzTick"
         tools:targetApi="31">
         <activity
+            android:name=".Historial_Tickets"
+            android:exported="false" />
+        <activity
             android:name=".Detalles_ticket"
             android:exported="false" />
         <activity
