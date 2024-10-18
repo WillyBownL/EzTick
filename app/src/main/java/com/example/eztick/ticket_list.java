@@ -46,10 +46,8 @@ public class ticket_list extends Fragment implements ListAdapter_ticket.OnTicket
         recyclerView = view.findViewById(R.id.recyclerViewTicket);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Inicializar la lista de tickets (asegúrate de no dejarla null)
         listaTickets = new ArrayList<>();
 
-        // Crear y configurar el adaptador
         ticketAdapter = new ListAdapter_ticket(listaTickets, getContext(), this);
         recyclerView.setAdapter(ticketAdapter);
 
@@ -58,6 +56,7 @@ public class ticket_list extends Fragment implements ListAdapter_ticket.OnTicket
         return view;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void cargarTickets() {
         tickets.get().addOnSuccessListener(queryDocumentSnapshots -> {
             if (listaTickets != null) {
@@ -70,7 +69,8 @@ public class ticket_list extends Fragment implements ListAdapter_ticket.OnTicket
                 listaTickets.add(ticket);
             }
 
-            Collections.sort(listaTickets, (ticket1, ticket2) -> {
+            assert listaTickets != null;
+            listaTickets.sort((ticket1, ticket2) -> {
                 int lvlPeligro1 = Integer.parseInt(ticket1.getLvlPeligro());
                 int lvlPeligro2 = Integer.parseInt(ticket2.getLvlPeligro());
                 return Integer.compare(lvlPeligro2, lvlPeligro1); // Ordenar por nivel de peligro

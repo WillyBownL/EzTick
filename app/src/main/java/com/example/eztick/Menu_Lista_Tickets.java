@@ -39,7 +39,6 @@ public class Menu_Lista_Tickets extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         SharedPreferences datos = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String usuario = datos.getString("usuario", "");
-        // incorporar el menu en la activity
         if (usuario.equals("MANTENIMIENTO")){
             getMenuInflater().inflate(R.menu.menu_mantenimiento,menu);
         } else if (usuario.equals("RRHH")) {
