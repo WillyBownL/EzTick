@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "868694873055",
+    "project_id": "ezticket1-d6094",
+    "storage_bucket": "ezticket1-d6094.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868694873055:android:8727ac9104ad416fb92a6a",
+        "android_client_info": {
+          "package_name": "com.example.eztick"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMzhmi6PQq6ks51XT51aUCeSiwD3Q8qoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

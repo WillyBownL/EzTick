@@ -29,14 +29,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void login(View v){
+    public void login(View v) {
 
         EditText campoUsuario = this.findViewById(R.id.usuario);
         String usuario = campoUsuario.getText().toString();
         EditText campoContrasenia = this.findViewById(R.id.contrasenia);
-        String contrasenia= campoContrasenia.getText().toString();
+        String contrasenia = campoContrasenia.getText().toString();
 
-        if(usuario.equals("RRHH") && contrasenia.equals(("123"))) {
+        if (usuario.equals("RRHH") && contrasenia.equals(("123"))) {
             SharedPreferences datos = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = datos.edit();
             editor.putString("usuario", usuario);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         } else if (usuario.isEmpty() || contrasenia.isEmpty()) {
             Toast.makeText(this, "Rellene todos los campos", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             Toast.makeText(this, "Error en las credenciales", Toast.LENGTH_SHORT).show();
         }
 
