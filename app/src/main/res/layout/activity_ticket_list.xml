@@ -16,8 +16,8 @@
         android:layout_height="wrap_content" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:name="com.example.eztick.ticket_list"
+        android:id="@+id/fragment_container"
+        android:name="com.example.eztick.ticket_list_old"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

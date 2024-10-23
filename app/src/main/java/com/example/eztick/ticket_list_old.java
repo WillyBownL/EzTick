@@ -14,19 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
-public class ticket_list extends Fragment implements ListAdapter_ticket.OnTicketClickListener {
+public class ticket_list_old extends Fragment implements ListAdapter_ticket.OnTicketClickListener {
     private RecyclerView recyclerView;
     private ListAdapter_ticket ticketAdapter;
     private List<ListElementTicket> listaTickets;
@@ -41,7 +38,7 @@ public class ticket_list extends Fragment implements ListAdapter_ticket.OnTicket
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ticket_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_ticket_list_old, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerViewTicket);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -85,7 +82,7 @@ public class ticket_list extends Fragment implements ListAdapter_ticket.OnTicket
     @Override
     public void onTicketClick(ListElementTicket ticket) {
         Log.d("TicketClick", "Ticket seleccionado: " + ticket.getTitulo());
-        Intent intent = new Intent(getContext(), Detalles_ticket.class);
+        Intent intent = new Intent(getContext(), Detalles_ticket_old.class);
         intent.putExtra("ticket_id", ticket.getId());
         startActivity(intent);
     }

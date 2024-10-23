@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/ticketTituloDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Título"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/ticketFechaDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="Fecha"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/ticketDescripcionDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripción"
+        android:textSize="16sp"
+        android:paddingTop="8dp"/>
+
+    <TextView
+        android:id="@+id/ticketPeligroDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nivel de Peligro"
+        android:textSize="16sp"
+        android:paddingTop="8dp"/>
+</LinearLayout>

@@ -1,33 +1,23 @@
 package com.example.eztick;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 
-import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class Detalles_ticket extends AppCompatActivity {
+public class Detalles_ticket_old extends AppCompatActivity {
 
     private TextView ticketTituloDetail, ticketDescripcionDetail, ticketFechaDetail, ticketPeligroDetail;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -100,7 +90,7 @@ public class Detalles_ticket extends AppCompatActivity {
     private void eliminarTicket(String ticketId) {
         db.collection("tickets").document(ticketId).delete().addOnSuccessListener(aVoid -> {
             Toast.makeText(this, "Ticket eliminado exitosamente", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Detalles_ticket.this, Menu_Lista_Tickets.class);
+            Intent intent = new Intent(Detalles_ticket_old.this, Menu_Lista_Tickets.class);
             startActivity(intent);
             finish();
         }).addOnFailureListener(e -> {
