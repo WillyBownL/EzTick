@@ -11,6 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -42,7 +44,7 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ticket_list_old, container, false);
+        View view = inflater.inflate(R.layout.fragment_ticket_list, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerViewTicket);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -57,29 +59,63 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
     }
 
     private void cargarTickets() {
-        tickets.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (listaTickets != null) {
-                listaTickets.clear();
-            }
-            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                ListElementTicket ticket = documentSnapshot.toObject(ListElementTicket.class);
-                assert ticket != null;
-                ticket.setId(documentSnapshot.getId());
-                listaTickets.add(ticket);
-            }
+        // Filtrar los tickets no resueltos directamente en Firestore
+        tickets.whereEqualTo("estado", "pendiente")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (listaTickets != null) {
+                        listaTickets.clear();
+                    }
 
-            assert listaTickets != null;
-            listaTickets.sort((ticket1, ticket2) -> {
-                int lvlPeligro1 = Integer.parseInt(ticket1.getLvlPeligro());
-                int lvlPeligro2 = Integer.parseInt(ticket2.getLvlPeligro());
-                return Integer.compare(lvlPeligro2, lvlPeligro1); // Ordenar por nivel de peligro
-            });
+                    // Añadir los tickets con estado "pendiente"
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ListElementTicket ticket = documentSnapshot.toObject(ListElementTicket.class);
+                        if (ticket != null) {
+                            ticket.setId(documentSnapshot.getId());
+                            listaTickets.add(ticket);
+                        }
+                    }
 
-            ticketAdapter.notifyDataSetChanged();
-        }).addOnFailureListener(e -> {
-            Log.e("FirestoreError", "Error al cargar los tickets: " + e.getMessage());
-        });
+                    // Realizar otra consulta para tickets sin campo "estado"
+                    tickets.whereEqualTo("estado", null)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots2 -> {
+                                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots2) {
+                                    ListElementTicket ticket = documentSnapshot.toObject(ListElementTicket.class);
+                                    if (ticket != null) {
+                                        ticket.setId(documentSnapshot.getId());
+                                        listaTickets.add(ticket);
+                                    }
+                                }
+
+                                // Ordenar por nivel de peligro
+                                if (!listaTickets.isEmpty()) {
+                                    listaTickets.sort((ticket1, ticket2) -> {
+                                        int lvlPeligro1 = Integer.parseInt(ticket1.getLvlPeligro());
+                                        int lvlPeligro2 = Integer.parseInt(ticket2.getLvlPeligro());
+                                        return Integer.compare(lvlPeligro2, lvlPeligro1);
+                                    });
+                                }
+
+                                // Notificar al adaptador para actualizar la vista
+                                ticketAdapter.notifyDataSetChanged();
+
+                                if (listaTickets.isEmpty()) {
+                                    Log.d("TicketListFragment", "No se encontraron tickets pendientes.");
+                                    Toast.makeText(getContext(), "No hay tickets pendientes", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.d("TicketListFragment", "Total de tickets pendientes cargados: " + listaTickets.size());
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("FirestoreError", "Error al cargar tickets sin estado: " + e.getMessage());
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreError", "Error al cargar tickets pendientes: " + e.getMessage());
+                });
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -146,6 +182,17 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
                     .addToBackStack(null) // Permitir regresar al fragmento anterior
                     .commit();
             return true;
+        }else if (id == R.id.verTicketsResueltos) {
+            // Crear una instancia de TicketsResueltosFragment
+            TicketsResueltosFragment ticketsResueltosFragment = new TicketsResueltosFragment();
+
+            // Reemplazar el fragmento actual por TicketsResueltosFragment
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, ticketsResueltosFragment)
+                    .addToBackStack(null)
+                    .commit();
+            return true;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -9,4 +9,10 @@
         android:visible="true"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/verTicketsResueltos"
+        android:icon="@drawable/ic_historial"
+        android:title="Historial"
+        app:showAsAction="always" />
+
 </menu>

@@ -14,4 +14,10 @@
         android:orderInCategory="1"
         android:title="@string/CrearTicket"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/verTicketsResueltos"
+        android:icon="@drawable/ic_historial"
+        android:title="Historial"
+        app:showAsAction="always" />
+
 </menu>

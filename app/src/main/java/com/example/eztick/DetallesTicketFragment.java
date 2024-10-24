@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DetallesTicketFragment extends Fragment {
 
     private TextView ticketTituloDetail, ticketDescripcionDetail, ticketFechaDetail, ticketPeligroDetail;
@@ -109,11 +112,16 @@ public class DetallesTicketFragment extends Fragment {
     }
 
     private void eliminarTicket(String ticketId) {
-        db.collection("tickets").document(ticketId).delete().addOnSuccessListener(aVoid -> {
-            Toast.makeText(getContext(), "Ticket eliminado exitosamente", Toast.LENGTH_SHORT).show();
+        Map<String, Object> updateFields = new HashMap<>();
+        updateFields.put("estado", "resuelto");
+        updateFields.put("fecha_resolucion", System.currentTimeMillis());
+
+        db.collection("tickets").document(ticketId).update(updateFields).addOnSuccessListener(aVoid -> {
+            Toast.makeText(getContext(), "Ticket marcado como resuelto", Toast.LENGTH_SHORT).show();
             requireActivity().getSupportFragmentManager().popBackStack();
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Error al eliminar el ticket", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error al marcar el ticket como resuelto", Toast.LENGTH_SHORT).show();
         });
     }
+
 }

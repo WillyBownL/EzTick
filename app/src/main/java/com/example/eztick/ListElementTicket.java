@@ -6,6 +6,8 @@ public class ListElementTicket {
     public String descripcion;
     public String fecha;
     public String lvlPeligro;
+    private long fecha_resolucion;
+    public String estado;
 
     public ListElementTicket() {
     }
@@ -15,6 +17,8 @@ public class ListElementTicket {
         this.descripcion = descripcion;
         this.fecha = fecha;
         this.lvlPeligro = lvlPeligro;
+        this.fecha_resolucion = 0;
+        this.estado = "pendiente";
     }
 
 
@@ -51,5 +55,11 @@ public class ListElementTicket {
     public void setLvlPeligro(String lvlPeligro) {
         this.lvlPeligro = lvlPeligro;
     }
+
+    public long getFecha_resolucion() { return fecha_resolucion; }
+
+    public void setFecha_resolucion(long fecha_resolucion) { this.fecha_resolucion = fecha_resolucion; }
+
+    public String getEstado() { return estado;}
 
 }
