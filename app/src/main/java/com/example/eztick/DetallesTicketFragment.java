@@ -1,6 +1,5 @@
 package com.example.eztick;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,16 +9,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetallesTicketFragment extends Fragment {
 
     private TextView ticketTituloDetail, ticketDescripcionDetail, ticketFechaDetail, ticketPeligroDetail;
+    private Button btnComentarios;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String ticketId;
 
@@ -35,15 +37,18 @@ public class DetallesTicketFragment extends Fragment {
         ticketDescripcionDetail = view.findViewById(R.id.ticketDescripcionDetail);
         ticketFechaDetail = view.findViewById(R.id.ticketFechaDetail);
         ticketPeligroDetail = view.findViewById(R.id.ticketPeligroDetail);
+        btnComentarios = view.findViewById(R.id.btnComentarios); // Botón para abrir comentarios
 
         if (getArguments() != null) {
             ticketId = getArguments().getString("ticket_id");
             cargarDetallesTicket(ticketId);
         }
 
+        // Configurar el botón para abrir el fragmento de comentarios
+        btnComentarios.setOnClickListener(v -> abrirComentarios());
+
         return view;
     }
-
 
     private void cargarDetallesTicket(String ticketId) {
         db.collection("tickets").document(ticketId).get().addOnSuccessListener(documentSnapshot -> {
@@ -59,6 +64,18 @@ public class DetallesTicketFragment extends Fragment {
         }).addOnFailureListener(e -> {
             Toast.makeText(getContext(), "Error al cargar los detalles del ticket", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void abrirComentarios() {
+        ComentariosFragment comentariosFragment = new ComentariosFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("ticket_id", ticketId);
+        comentariosFragment.setArguments(bundle);
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, comentariosFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -77,7 +94,6 @@ public class DetallesTicketFragment extends Fragment {
             inflater.inflate(R.menu.menu_detalles_ticket, menu);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
