@@ -18,9 +18,6 @@
             android:name=".Detalles_ticket_old"
             android:exported="false" />
         <activity
-            android:name=".activity_crear_ticket"
-            android:exported="false" />
-        <activity
             android:name=".Menu_Lista_Tickets"
             android:exported="false" />
         <activity

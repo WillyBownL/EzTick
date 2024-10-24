@@ -10,30 +10,40 @@
         android:id="@+id/agregar_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Título del Ticket"/>
+        android:layout_marginBottom="10dp"
+        android:height="48dp"
+        android:hint="@string/titulo" />
 
     <EditText
         android:id="@+id/agregar_descripcion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripción"
+        android:layout_marginBottom="10dp"
+        android:hint="@string/usuario"
         android:inputType="textMultiLine"
-        android:lines="4"/>
+        android:lines="4" />
 
     <EditText
         android:id="@+id/agregar_fecha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Fecha"/>
+        android:layout_marginBottom="10dp"
+        android:height="48dp"
+        android:hint="@string/descripcion" />
 
     <Spinner
         android:id="@+id/agregar_lvlpeligro"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:autofillHints="@string/lvlPeligro"
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/btn_agregar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agregar Ticket"/>
+        android:backgroundTint="@color/dark_primary_color"
+        android:text="Agregar Ticket"
+        android:textColor="@color/text_and_icons" />
 </LinearLayout>
