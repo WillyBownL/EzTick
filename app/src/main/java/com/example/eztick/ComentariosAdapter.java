@@ -32,7 +32,6 @@ public class ComentariosAdapter extends RecyclerView.Adapter<ComentariosAdapter.
         holder.textViewRol.setText(comentario.getRol());
         holder.textViewTexto.setText(comentario.getTexto());
 
-        // Formatear la marca de tiempo para mostrar la hora
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String horaEnvio = sdf.format(new Date(comentario.getTimestamp()));
         holder.textViewHora.setText(horaEnvio);

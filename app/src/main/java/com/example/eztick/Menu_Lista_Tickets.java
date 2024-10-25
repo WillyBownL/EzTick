@@ -64,7 +64,6 @@ public class Menu_Lista_Tickets extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
 
-        // Llamar a invalidateOptionsMenu() para actualizar el menú
         invalidateOptionsMenu();
     }
 

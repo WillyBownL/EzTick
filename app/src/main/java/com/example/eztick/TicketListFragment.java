@@ -141,7 +141,6 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
         // Limpiar el menú de la actividad antes de navegar
         requireActivity().invalidateOptionsMenu();
 
-        // Crear una instancia de DetallesTicketFragment
         DetallesTicketFragment detallesFragment = new DetallesTicketFragment();
 
         // Crear un Bundle para pasar los datos del ticket
@@ -149,7 +148,7 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
         bundle.putString("ticket_id", ticket.getId());
         detallesFragment.setArguments(bundle);
 
-        // Reemplazar el fragmento actual por DetallesTicketFragment
+        // Reemplazar el fragmento actual
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, detallesFragment);
         transaction.addToBackStack(null);
@@ -173,20 +172,17 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
             return true;
 
         } else if (id == R.id.CrearTicket) {
-            // Crear una instancia de CrearTicketFragment
             CrearTicketFragment crearTicketFragment = new CrearTicketFragment();
 
-            // Reemplazar el fragmento actual por CrearTicketFragment
+
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, crearTicketFragment)
-                    .addToBackStack(null) // Permitir regresar al fragmento anterior
+                    .addToBackStack(null)
                     .commit();
             return true;
         }else if (id == R.id.verTicketsResueltos) {
-            // Crear una instancia de TicketsResueltosFragment
             TicketsResueltosFragment ticketsResueltosFragment = new TicketsResueltosFragment();
 
-            // Reemplazar el fragmento actual por TicketsResueltosFragment
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, ticketsResueltosFragment)
                     .addToBackStack(null)

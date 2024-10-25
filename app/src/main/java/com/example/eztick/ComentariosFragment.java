@@ -106,7 +106,6 @@ public class ComentariosFragment extends Fragment {
         SharedPreferences datos = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String rol = datos.getString("usuario", "");
 
-        // Crear un nuevo comentario con la marca de tiempo
         Map<String, Object> nuevoComentario = new HashMap<>();
         nuevoComentario.put("rol", rol);
         nuevoComentario.put("texto", textoComentario);

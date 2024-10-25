@@ -6,7 +6,6 @@ public class Comentario {
     private long timestamp;
 
     public Comentario() {
-        // Constructor vacío necesario para Firestore
     }
 
     public Comentario(String rol, String texto, long timestamp) {
