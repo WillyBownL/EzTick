@@ -27,6 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragmento que muestra una lista de tickets pendientes y maneja interacciones de usuario,
+ * como seleccionar un ticket o interactuar con el menú.
+ */
 public class TicketListFragment extends Fragment implements ListAdapter_ticket.OnTicketClickListener {
     private RecyclerView recyclerView;
     private ListAdapter_ticket ticketAdapter;
@@ -34,18 +38,32 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     public CollectionReference tickets = db.collection("tickets");
 
+    /**
+     * Método llamado al crear el fragmento.
+     * Se configura para manejar el menú de opciones.
+     * 
+     * @param savedInstanceState Estado guardado de la instancia, si existe.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true); // Permitir que el fragmento maneje el menú
+        setHasOptionsMenu(true); // Permite que el fragmento maneje el menú
     }
 
-
+    /**
+     * Infla la vista del fragmento, configura el RecyclerView y carga los tickets.
+     * 
+     * @param inflater Inflador de vistas para inflar el layout del fragmento.
+     * @param container El contenedor de la vista del fragmento.
+     * @param savedInstanceState Estado guardado de la instancia, si existe.
+     * @return Vista inflada con el layout del fragmento.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ticket_list, container, false);
 
+        // Configuración del RecyclerView
         recyclerView = view.findViewById(R.id.recyclerViewTicket);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -53,13 +71,19 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
         ticketAdapter = new ListAdapter_ticket(listaTickets, getContext(), this);
         recyclerView.setAdapter(ticketAdapter);
 
+        // Cargar los tickets desde Firebase
         cargarTickets();
 
         return view;
     }
 
+    /**
+     * Método que carga los tickets desde Firestore.
+     * Filtra los tickets con estado "pendiente" y sin campo "estado".
+     * Luego los ordena por nivel de peligro y actualiza la vista.
+     */
     private void cargarTickets() {
-        // Filtrar los tickets no resueltos directamente en Firestore
+        // Filtrar los tickets con estado "pendiente" directamente en Firestore
         tickets.whereEqualTo("estado", "pendiente")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -93,7 +117,7 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
                                     listaTickets.sort((ticket1, ticket2) -> {
                                         int lvlPeligro1 = Integer.parseInt(ticket1.getLvlPeligro());
                                         int lvlPeligro2 = Integer.parseInt(ticket2.getLvlPeligro());
-                                        return Integer.compare(lvlPeligro2, lvlPeligro1);
+                                        return Integer.compare(lvlPeligro2, lvlPeligro1); // Ordenar de mayor a menor nivel de peligro
                                     });
                                 }
 
@@ -116,7 +140,13 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
                 });
     }
 
-
+    /**
+     * Método que maneja la creación del menú de opciones para el fragmento.
+     * Se infla un menú dependiendo del tipo de usuario.
+     * 
+     * @param menu El menú donde se van a agregar las opciones.
+     * @param inflater Inflador que ayuda a inflar el menú.
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         // Limpiar el menú actual
@@ -134,6 +164,12 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
         }
     }
 
+    /**
+     * Método que maneja los eventos de clic en un ticket.
+     * Abre los detalles del ticket seleccionado en un nuevo fragmento.
+     * 
+     * @param ticket El ticket que fue seleccionado.
+     */
     @Override
     public void onTicketClick(ListElementTicket ticket) {
         Log.d("TicketClick", "Ticket seleccionado: " + ticket.getTitulo());
@@ -155,6 +191,12 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
         transaction.commit();
     }
 
+    /**
+     * Método que maneja las acciones de los elementos del menú.
+     * 
+     * @param item El ítem del menú que fue seleccionado.
+     * @return True si la acción se maneja correctamente, false de lo contrario.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -162,6 +204,7 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
         String usuario = datos.getString("usuario", "");
 
         if (id == R.id.CerrarSesion) {
+            // Cerrar sesión y navegar a la pantalla de inicio de sesión
             SharedPreferences.Editor editor = datos.edit();
             editor.remove("usuario");
             editor.apply();
@@ -172,15 +215,17 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
             return true;
 
         } else if (id == R.id.CrearTicket) {
+            // Navegar al fragmento para crear un nuevo ticket
             CrearTicketFragment crearTicketFragment = new CrearTicketFragment();
-
 
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, crearTicketFragment)
                     .addToBackStack(null)
                     .commit();
             return true;
-        }else if (id == R.id.verTicketsResueltos) {
+
+        } else if (id == R.id.verTicketsResueltos) {
+            // Navegar al fragmento para ver los tickets resueltos
             TicketsResueltosFragment ticketsResueltosFragment = new TicketsResueltosFragment();
 
             requireActivity().getSupportFragmentManager().beginTransaction()
@@ -188,12 +233,8 @@ public class TicketListFragment extends Fragment implements ListAdapter_ticket.O
                     .addToBackStack(null)
                     .commit();
             return true;
-
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }
