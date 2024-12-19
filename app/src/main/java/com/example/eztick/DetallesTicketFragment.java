@@ -1,5 +1,6 @@
 package com.example.eztick;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -127,7 +128,7 @@ public class DetallesTicketFragment extends Fragment {
         if (usuario.equals("MANTENIMIENTO")) {
             inflater.inflate(R.menu.menu_solo_volver, menu); // Menú con solo opción de volver
         } else if (usuario.equals("RRHH")) {
-            inflater.inflate(R.menu.menu_detalles_ticket, menu); // Menú con opciones para finalizar ticket
+            inflater.inflate(R.menu.menu_detalles_ticket, menu); // Menú con opciones para finalizar y eliminar ticket
         }
     }
 
@@ -144,6 +145,9 @@ public class DetallesTicketFragment extends Fragment {
 
         // Si el usuario selecciona "finalizar", marcar el ticket como resuelto
         if (id == R.id.finalizar) {
+            finalizarTicket(ticketId);
+            return true;
+        } else if (id == R.id.eliminar) {
             eliminarTicket(ticketId);
             return true;
         } else if (id == R.id.atras) {
@@ -159,7 +163,7 @@ public class DetallesTicketFragment extends Fragment {
      *
      * @param ticketId El ID del ticket que se va a marcar como resuelto.
      */
-    private void eliminarTicket(String ticketId) {
+    private void finalizarTicket(String ticketId) {
         // Crear un mapa con los campos a actualizar en la base de datos
         Map<String, Object> updateFields = new HashMap<>();
         updateFields.put("estado", "resuelto"); // Marcar el estado como "resuelto"
@@ -176,4 +180,25 @@ public class DetallesTicketFragment extends Fragment {
         });
     }
 
+    /**
+     * Elimina el ticket de la base de datos.
+     *
+     * @param ticketId El ID del ticket que se va a eliminar.
+     */
+    private void eliminarTicket(String ticketId) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Eliminar Ticket")
+                .setMessage("¿Estás seguro de que deseas eliminar este ticket? Esta acción no se puede deshacer.")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    db.collection("tickets").document(ticketId).delete()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(), "Ticket eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                                requireActivity().getSupportFragmentManager().popBackStack(); // Volver al fragmento anterior
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(getContext(), "Error al eliminar el ticket", Toast.LENGTH_SHORT).show());
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 }
+

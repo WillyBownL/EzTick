@@ -15,4 +15,12 @@
         android:title="@string/finalizar"
         android:visible="true"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/eliminar"
+        android:icon="@drawable/ic_true_eliminar"
+        android:title="@string/eliminar"
+        android:visible="true"
+        app:showAsAction="always" />
+
+
 </menu>

@@ -65,9 +65,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
         android:layout_marginTop="10dp"
+        android:backgroundTint="@color/dark_primary_color"
         android:onClick="login"
         android:text="@string/btnIngresar"
-        android:textColor="#795548"
+        android:textColor="@color/text_and_icons"
         android:textColorLink="@color/dark_primary_color" />
 
 </LinearLayout>
