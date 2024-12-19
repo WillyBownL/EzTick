@@ -132,20 +132,44 @@ public class CrearTicketFragment extends Fragment {
     }
 
     /**
+     * Valida los campos del formulario antes de guardar o editar el ticket.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
+    private boolean validarCampos() {
+        String titulo = Agregar_titulo.getText().toString();
+        String descripcion = Agregar_descripcion.getText().toString();
+        String fecha = Agregar_fecha.getText().toString();
+
+        if (TextUtils.isEmpty(titulo)) {
+            Agregar_titulo.setError("El título es obligatorio");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(descripcion)) {
+            Agregar_descripcion.setError("La descripción es obligatoria");
+            return false;
+        }
+
+        if (!fecha.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            Agregar_fecha.setError("La fecha debe tener el formato dd/MM/yyyy");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Crea un ticket usando la información del formulario y la agrega a Firestore.
      */
     private void crearTicket() {
+        if (!validarCampos()) return;
+
         // Obtener los datos ingresados por el usuario en el formulario.
         String titulo = Agregar_titulo.getText().toString();
         String descripcion = Agregar_descripcion.getText().toString();
         String fecha = Agregar_fecha.getText().toString();
         String lvlPeligro = Agregar_lvlpeligro.getSelectedItem().toString();
-
-        // Verificar que todos los campos estén completos.
-        if (TextUtils.isEmpty(titulo) || TextUtils.isEmpty(descripcion) || TextUtils.isEmpty(fecha)) {
-            Toast.makeText(getContext(), "Rellene todos los campos", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         // Crear un objeto Ticket con los datos del formulario.
         ListElementTicket ticket = new ListElementTicket(titulo, descripcion, fecha, lvlPeligro);
@@ -160,17 +184,13 @@ public class CrearTicketFragment extends Fragment {
      * @param ticketId El ID del ticket que se va a editar.
      */
     private void editarTicket(String ticketId) {
+        if (!validarCampos()) return;
+
         // Obtener los datos ingresados por el usuario en el formulario.
         String titulo = Agregar_titulo.getText().toString();
         String descripcion = Agregar_descripcion.getText().toString();
         String fecha = Agregar_fecha.getText().toString();
         String lvlPeligro = Agregar_lvlpeligro.getSelectedItem().toString();
-
-        // Verificar que todos los campos estén completos.
-        if (TextUtils.isEmpty(titulo) || TextUtils.isEmpty(descripcion) || TextUtils.isEmpty(fecha)) {
-            Toast.makeText(getContext(), "Rellene todos los campos", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         // Crear un mapa con los campos a actualizar.
         Map<String, Object> updateFields = new HashMap<>();
