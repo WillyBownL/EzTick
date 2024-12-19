@@ -128,13 +128,13 @@ public class DetallesTicketFragment extends Fragment {
         if (usuario.equals("MANTENIMIENTO")) {
             inflater.inflate(R.menu.menu_solo_volver, menu); // Menú con solo opción de volver
         } else if (usuario.equals("RRHH")) {
-            inflater.inflate(R.menu.menu_detalles_ticket, menu); // Menú con opciones para finalizar y eliminar ticket
+            inflater.inflate(R.menu.menu_detalles_ticket, menu); // Menú con opciones para finalizar, editar y eliminar ticket
         }
     }
 
     /**
      * Maneja la selección de los ítems del menú.
-     * Permite al usuario finalizar un ticket o volver al fragmento anterior.
+     * Permite al usuario finalizar un ticket, editarlo o volver al fragmento anterior.
      *
      * @param item El ítem del menú que se ha seleccionado.
      * @return true si el ítem fue manejado correctamente.
@@ -146,6 +146,9 @@ public class DetallesTicketFragment extends Fragment {
         // Si el usuario selecciona "finalizar", marcar el ticket como resuelto
         if (id == R.id.finalizar) {
             finalizarTicket(ticketId);
+            return true;
+        } else if (id == R.id.editar) {
+            editarTicket(ticketId);
             return true;
         } else if (id == R.id.eliminar) {
             eliminarTicket(ticketId);
@@ -200,5 +203,23 @@ public class DetallesTicketFragment extends Fragment {
                 .setNegativeButton("No", null)
                 .show();
     }
-}
 
+    /**
+     * Abre el fragmento de creación/edición para editar el ticket actual.
+     *
+     * @param ticketId El ID del ticket que se va a editar.
+     */
+    private void editarTicket(String ticketId) {
+        // Crear un nuevo fragmento de creación/edición
+        CrearTicketFragment editarFragment = new CrearTicketFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("ticket_id", ticketId); // Pasar el ID del ticket al fragmento
+        editarFragment.setArguments(bundle);
+
+        // Reemplazar el fragmento actual por el de edición
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, editarFragment) // Reemplazar el fragmento
+                .addToBackStack(null) // Agregar a la pila de retroceso
+                .commit();
+    }
+}

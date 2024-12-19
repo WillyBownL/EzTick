@@ -22,9 +22,12 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Fragmento para la creación de un nuevo ticket.
- * Permite al usuario ingresar información sobre el ticket y guardarla en Firebase Firestore.
+ * Fragmento para la creación o edición de un ticket.
+ * Permite al usuario ingresar o modificar información sobre el ticket y guardarla en Firebase Firestore.
  */
 public class CrearTicketFragment extends Fragment {
 
@@ -32,10 +35,13 @@ public class CrearTicketFragment extends Fragment {
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     public CollectionReference tickets = db.collection("tickets");
 
-    // Vistas del formulario de creación de ticket.
+    // Vistas del formulario de ticket.
     private EditText Agregar_titulo, Agregar_descripcion, Agregar_fecha;
     private Spinner Agregar_lvlpeligro;
-    private Button Btn_agregar;
+    private Button Btn_guardar;
+
+    // Variables para distinguir entre crear y editar
+    private String ticketId = null;
 
     /**
      * Método que infla la vista del fragmento y configura las vistas y acciones.
@@ -55,13 +61,28 @@ public class CrearTicketFragment extends Fragment {
         Agregar_descripcion = view.findViewById(R.id.agregar_descripcion);
         Agregar_fecha = view.findViewById(R.id.agregar_fecha);
         Agregar_lvlpeligro = view.findViewById(R.id.agregar_lvlpeligro);
-        Btn_agregar = view.findViewById(R.id.btn_agregar);
+        Btn_guardar = view.findViewById(R.id.btn_agregar);
 
         // Configurar el spinner con los niveles de peligro.
         crearAdaptador(getContext());
 
-        // Configurar el botón de agregar ticket.
-        Btn_agregar.setOnClickListener(v -> crearTicket());
+        // Verificar si es edición o creación
+        if (getArguments() != null) {
+            ticketId = getArguments().getString("ticket_id", null);
+            if (ticketId != null) {
+                cargarDetallesTicket(ticketId); // Cargar datos para edición
+                Btn_guardar.setText("Actualizar Ticket"); // Cambiar texto del botón
+            }
+        }
+
+        // Configurar el botón para guardar (crear o editar ticket).
+        Btn_guardar.setOnClickListener(v -> {
+            if (ticketId == null) {
+                crearTicket();
+            } else {
+                editarTicket(ticketId);
+            }
+        });
 
         // Habilitar el menú en el fragmento.
         setHasOptionsMenu(true);
@@ -131,6 +152,65 @@ public class CrearTicketFragment extends Fragment {
 
         // Llamar al método para agregar el ticket a Firestore.
         agregarTicket(ticket);
+    }
+
+    /**
+     * Edita un ticket existente usando la información del formulario y actualiza Firestore.
+     *
+     * @param ticketId El ID del ticket que se va a editar.
+     */
+    private void editarTicket(String ticketId) {
+        // Obtener los datos ingresados por el usuario en el formulario.
+        String titulo = Agregar_titulo.getText().toString();
+        String descripcion = Agregar_descripcion.getText().toString();
+        String fecha = Agregar_fecha.getText().toString();
+        String lvlPeligro = Agregar_lvlpeligro.getSelectedItem().toString();
+
+        // Verificar que todos los campos estén completos.
+        if (TextUtils.isEmpty(titulo) || TextUtils.isEmpty(descripcion) || TextUtils.isEmpty(fecha)) {
+            Toast.makeText(getContext(), "Rellene todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Crear un mapa con los campos a actualizar.
+        Map<String, Object> updateFields = new HashMap<>();
+        updateFields.put("titulo", titulo);
+        updateFields.put("descripcion", descripcion);
+        updateFields.put("fecha", fecha);
+        updateFields.put("lvlPeligro", lvlPeligro);
+
+        // Actualizar el ticket en la base de datos.
+        tickets.document(ticketId).update(updateFields).addOnSuccessListener(aVoid -> {
+            // Mostrar mensaje de éxito y volver al fragmento anterior.
+            Toast.makeText(getContext(), "Ticket actualizado exitosamente", Toast.LENGTH_SHORT).show();
+            requireActivity().getSupportFragmentManager().popBackStack();
+        }).addOnFailureListener(e -> {
+            // Mostrar mensaje de error si la operación falla.
+            Toast.makeText(getContext(), "Error al actualizar el ticket", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    /**
+     * Carga los detalles de un ticket existente para mostrarlos en el formulario.
+     *
+     * @param ticketId El ID del ticket cuyos detalles se van a cargar.
+     */
+    private void cargarDetallesTicket(String ticketId) {
+        tickets.document(ticketId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                ListElementTicket ticket = documentSnapshot.toObject(ListElementTicket.class);
+                if (ticket != null) {
+                    Agregar_titulo.setText(ticket.getTitulo());
+                    Agregar_descripcion.setText(ticket.getDescripcion());
+                    Agregar_fecha.setText(ticket.getFecha());
+                    ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) Agregar_lvlpeligro.getAdapter();
+                    int position = adapter.getPosition(ticket.getLvlPeligro());
+                    Agregar_lvlpeligro.setSelection(position);
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Error al cargar los detalles del ticket", Toast.LENGTH_SHORT).show();
+        });
     }
 
     /**
